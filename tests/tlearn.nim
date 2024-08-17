@@ -54,11 +54,11 @@ test "fs readsync":
   checkpoint "uv_fs_open"
 
   var open_req: uv_fs_t
-  let fd = uv_fs_open(loop, open_req.addr, path, when_posix(O_RDONLY.int32,
-      0), when_posix(S_IRUSR.int32, 0), nil)
+  let fd = uv_fs_open(loop, open_req.addr, path, when_posix(O_RDONLY.cint,
+      0), when_posix(S_IRUSR.cint, 0), nil)
 
   var buf: array[37, byte]
-  var iov = uv_buf_init(cast[cstring](buf.addr), len(buf).uint32)
+  var iov = uv_buf_init(buf[0].addr, len(buf).cuint)
 
   checkpoint "uv_fs_read"
 
@@ -83,11 +83,11 @@ test "fs readasync":
   checkpoint "uv_fs_open"
 
   var open_req: uv_fs_t
-  let fd = uv_fs_open(loop, open_req.addr, path, when_posix(O_RDONLY.int32,
-      0), when_posix(S_IRUSR.int32, 0), nil)
+  let fd = uv_fs_open(loop, open_req.addr, path, when_posix(O_RDONLY.cint,
+      0), when_posix(S_IRUSR.cint, 0), nil)
 
   var buf: array[37, byte]
-  var iov = uv_buf_init(cast[cstring](buf.addr), len(buf).uint32)
+  var iov = uv_buf_init(buf[0].addr, len(buf).cuint)
 
   checkpoint "uv_fs_read"
 

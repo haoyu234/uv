@@ -29,16 +29,16 @@ proc uv_getnameinfo*(loop: ptr uv_loop_t, req: ptr uv_getnameinfo_t, getnameinfo
 
 # errors
 proc uv_strerror*(err: cint): cstring {.UV_API.}
-proc uv_strerror_r*(err: cint, buf: cstring, buflen: csize_t): cstring {.UV_API.}
+proc uv_strerror_r*(err: cint, buf: pointer, buflen: csize_t): cstring {.UV_API.}
 proc uv_err_name*(err: cint): cstring {.UV_API.}
-proc uv_err_name_r*(err: cint, buf: cstring, buflen: csize_t): cstring {.UV_API.}
+proc uv_err_name_r*(err: cint, buf: pointer, buflen: csize_t): cstring {.UV_API.}
 proc uv_translate_sys_error*(sys_errno: cint): cint {.UV_API.}
 
 # fs_poll
 proc uv_fs_poll_init*(loop: ptr uv_loop_t, handle: ptr uv_fs_poll_t): cint {.UV_API.}
 proc uv_fs_poll_start*(handle: ptr uv_fs_poll_t, poll_cb: uv_fs_poll_cb, path: cstring, interval: cuint): cint {.UV_API.}
 proc uv_fs_poll_stop*(handle: ptr uv_fs_poll_t): cint {.UV_API.}
-proc uv_fs_poll_getpath*(handle: ptr uv_fs_poll_t, buffer: cstring, size: ptr csize_t): cint {.UV_API.}
+proc uv_fs_poll_getpath*(handle: ptr uv_fs_poll_t, buffer: pointer, size: ptr csize_t): cint {.UV_API.}
 
 # idle
 proc uv_idle_init*(loop: ptr uv_loop_t, idle: ptr uv_idle_t): cint {.UV_API.}
@@ -70,9 +70,9 @@ proc uv_metrics_info*(loop: ptr uv_loop_t, metrics: ptr uv_metrics_t): cint {.UV
 proc uv_guess_handle*(file: cint): uv_handle_type {.UV_API.}
 proc uv_replace_allocator*(malloc_func: uv_malloc_func, realloc_func: uv_realloc_func, calloc_func: uv_calloc_func, free_func: uv_free_func): cint {.UV_API.}
 proc uv_library_shutdown*() {.UV_API.}
-proc uv_buf_init*(base: cstring, len: cuint): uv_buf_t {.UV_API.}
+proc uv_buf_init*(base: pointer, len: cuint): uv_buf_t {.UV_API.}
 proc uv_setup_args*(argc: cint, argv: ptr cstring): ptr cstring {.UV_API.}
-proc uv_get_process_title*(buffer: cstring, size: csize_t): cint {.UV_API.}
+proc uv_get_process_title*(buffer: pointer, size: csize_t): cint {.UV_API.}
 proc uv_set_process_title*(title: cstring): cint {.UV_API.}
 proc uv_resident_set_memory*(rss: ptr csize_t): cint {.UV_API.}
 proc uv_uptime*(uptime: ptr cdouble): cint {.UV_API.}
@@ -88,18 +88,18 @@ proc uv_free_interface_addresses*(addresses: ptr uv_interface_address_t, count: 
 proc uv_loadavg*(avg: array[3, cdouble]) {.UV_API.}
 proc uv_ip4_addr*(ip: cstring, port: cint, `addr`: ptr Sockaddr_in): cint {.UV_API.}
 proc uv_ip6_addr*(ip: cstring, port: cint, `addr`: ptr Sockaddr_in6): cint {.UV_API.}
-proc uv_ip4_name*(src: ptr Sockaddr_in, dst: cstring, size: csize_t): cint {.UV_API.}
-proc uv_ip6_name*(src: ptr Sockaddr_in6, dst: cstring, size: csize_t): cint {.UV_API.}
-proc uv_ip_name*(src: ptr SockAddr, dst: cstring, size: csize_t): cint {.UV_API.}
-proc uv_inet_ntop*(af: cint, src: pointer, dst: cstring, size: csize_t): cint {.UV_API.}
+proc uv_ip4_name*(src: ptr Sockaddr_in, dst: pointer, size: csize_t): cint {.UV_API.}
+proc uv_ip6_name*(src: ptr Sockaddr_in6, dst: pointer, size: csize_t): cint {.UV_API.}
+proc uv_ip_name*(src: ptr SockAddr, dst: pointer, size: csize_t): cint {.UV_API.}
+proc uv_inet_ntop*(af: cint, src: pointer, dst: pointer, size: csize_t): cint {.UV_API.}
 proc uv_inet_pton*(af: cint, src: cstring, dst: pointer): cint {.UV_API.}
-proc uv_if_indextoname*(ifindex: cuint, buffer: cstring, size: ptr csize_t): cint {.UV_API.}
-proc uv_if_indextoiid*(ifindex: cuint, buffer: cstring, size: ptr csize_t): cint {.UV_API.}
-proc uv_exepath*(buffer: cstring, size: ptr csize_t): cint {.UV_API.}
-proc uv_cwd*(buffer: cstring, size: ptr csize_t): cint {.UV_API.}
+proc uv_if_indextoname*(ifindex: cuint, buffer: pointer, size: ptr csize_t): cint {.UV_API.}
+proc uv_if_indextoiid*(ifindex: cuint, buffer: pointer, size: ptr csize_t): cint {.UV_API.}
+proc uv_exepath*(buffer: pointer, size: ptr csize_t): cint {.UV_API.}
+proc uv_cwd*(buffer: pointer, size: ptr csize_t): cint {.UV_API.}
 proc uv_chdir*(dir: cstring): cint {.UV_API.}
-proc uv_os_homedir*(buffer: cstring, size: ptr csize_t): cint {.UV_API.}
-proc uv_os_tmpdir*(buffer: cstring, size: ptr csize_t): cint {.UV_API.}
+proc uv_os_homedir*(buffer: pointer, size: ptr csize_t): cint {.UV_API.}
+proc uv_os_tmpdir*(buffer: pointer, size: ptr csize_t): cint {.UV_API.}
 proc uv_os_get_passwd*(pwd: ptr uv_passwd_t): cint {.UV_API.}
 proc uv_os_get_passwd2*(pwd: ptr uv_passwd_t, uid: uv_uid_t): cint {.UV_API.}
 proc uv_os_get_group*(group: ptr uv_group_t, gid: uv_uid_t): cint {.UV_API.}
@@ -115,10 +115,10 @@ proc uv_print_all_handles*(loop: ptr uv_loop_t, stream: CFilePtr) {.UV_API.}
 proc uv_print_active_handles*(loop: ptr uv_loop_t, stream: CFilePtr) {.UV_API.}
 proc uv_os_environ*(envitems: ptr ptr uv_env_item_t, count: ptr cint): cint {.UV_API.}
 proc uv_os_free_environ*(envitems: ptr uv_env_item_t, count: cint) {.UV_API.}
-proc uv_os_getenv*(name: cstring, buffer: cstring, size: ptr csize_t): cint {.UV_API.}
+proc uv_os_getenv*(name: cstring, buffer: pointer, size: ptr csize_t): cint {.UV_API.}
 proc uv_os_setenv*(name: cstring, value: cstring): cint {.UV_API.}
 proc uv_os_unsetenv*(name: cstring): cint {.UV_API.}
-proc uv_os_gethostname*(buffer: cstring, size: ptr csize_t): cint {.UV_API.}
+proc uv_os_gethostname*(buffer: pointer, size: ptr csize_t): cint {.UV_API.}
 proc uv_os_getpriority*(pid: cint, priority: ptr cint): cint {.UV_API.}
 proc uv_os_setpriority*(pid: cint, priority: cint): cint {.UV_API.}
 proc uv_os_uname*(buffer: ptr uv_utsname_t): cint {.UV_API.}
@@ -126,9 +126,9 @@ proc uv_gettimeofday*(tv: ptr uv_timeval64_t): cint {.UV_API.}
 proc uv_random*(loop: ptr uv_loop_t, req: ptr uv_random_t, buf: pointer, buflen: csize_t, flags: cuint, cb: uv_random_cb): cint {.UV_API.}
 proc uv_sleep*(msec: cuint) {.UV_API.}
 proc uv_utf16_length_as_wtf8*(utf16: ptr uint16, utf16_len: csize_t): csize_t {.UV_API.}
-proc uv_utf16_to_wtf8*(utf16: ptr uint16, utf16_len: csize_t, wtf8_ptr: ptr cstring, wtf8_len_ptr: ptr csize_t): cint {.UV_API.}
-proc uv_wtf8_length_as_utf16*(wtf8: cstring): csize_t {.UV_API.}
-proc uv_wtf8_to_utf16*(utf8: cstring, utf16: ptr uint16, utf16_len: csize_t) {.UV_API.}
+proc uv_utf16_to_wtf8*(utf16: ptr uint16, utf16_len: csize_t, wtf8_ptr: ptr ptr char, wtf8_len_ptr: ptr csize_t): cint {.UV_API.}
+proc uv_wtf8_length_as_utf16*(wtf8: ptr char): csize_t {.UV_API.}
+proc uv_wtf8_to_utf16*(utf8: ptr char, utf16: ptr uint16, utf16_len: csize_t) {.UV_API.}
 
 # pipe
 proc uv_pipe_init*(loop: ptr uv_loop_t, handle: ptr uv_pipe_t, ipc: cint): cint {.UV_API.}
@@ -136,9 +136,9 @@ proc uv_pipe_open*(handle: ptr uv_pipe_t, file: cint): cint {.UV_API.}
 proc uv_pipe_bind*(handle: ptr uv_pipe_t, name: cstring): cint {.UV_API.}
 proc uv_pipe_bind2*(handle: ptr uv_pipe_t, name: cstring, namelen: csize_t, flags: cuint): cint {.UV_API.}
 proc uv_pipe_connect*(req: ptr uv_connect_t, handle: ptr uv_pipe_t, name: cstring, cb: uv_connect_cb) {.UV_API.}
-proc uv_pipe_connect2*(req: ptr uv_connect_t, handle: ptr uv_pipe_t, name: cstring, namelen: csize_t, flags: cuint, cb: uv_connect_cb) {.UV_API.}
-proc uv_pipe_getsockname*(handle: ptr uv_pipe_t, buffer: cstring, size: ptr csize_t): cint {.UV_API.}
-proc uv_pipe_getpeername*(handle: ptr uv_pipe_t, buffer: cstring, size: ptr csize_t): cint {.UV_API.}
+proc uv_pipe_connect2*(req: ptr uv_connect_t, handle: ptr uv_pipe_t, name: pointer, namelen: csize_t, flags: cuint, cb: uv_connect_cb) {.UV_API.}
+proc uv_pipe_getsockname*(handle: ptr uv_pipe_t, buffer: pointer, size: ptr csize_t): cint {.UV_API.}
+proc uv_pipe_getpeername*(handle: ptr uv_pipe_t, buffer: pointer, size: ptr csize_t): cint {.UV_API.}
 proc uv_pipe_pending_instances*(handle: ptr uv_pipe_t, count: cint) {.UV_API.}
 proc uv_pipe_pending_count*(handle: ptr uv_pipe_t): cint {.UV_API.}
 proc uv_pipe_pending_type*(handle: ptr uv_pipe_t): uv_handle_type {.UV_API.}
@@ -174,8 +174,8 @@ proc uv_stream_get_write_queue_size*(stream: ptr uv_stream_t): csize_t {.UV_API.
 # threading
 proc uv_thread_create*(tid: ptr uv_thread_t, entry: uv_thread_cb, arg: pointer): cint {.UV_API.}
 proc uv_thread_create_ex*(tid: ptr uv_thread_t, params: ptr uv_thread_options_t, entry: uv_thread_cb, arg: pointer): cint {.UV_API.}
-proc uv_thread_setaffinity*(tid: ptr uv_thread_t, cpumask: cstring, oldmask: cstring, mask_size: csize_t): cint {.UV_API.}
-proc uv_thread_getaffinity*(tid: ptr uv_thread_t, cpumask: cstring, mask_size: csize_t): cint {.UV_API.}
+proc uv_thread_setaffinity*(tid: ptr uv_thread_t, cpumask: pointer, oldmask: pointer, mask_size: csize_t): cint {.UV_API.}
+proc uv_thread_getaffinity*(tid: ptr uv_thread_t, cpumask: pointer, mask_size: csize_t): cint {.UV_API.}
 proc uv_thread_getcpu*(): cint {.UV_API.}
 proc uv_thread_self*(): uv_thread_t {.UV_API.}
 proc uv_thread_join*(tid: ptr uv_thread_t): cint {.UV_API.}
@@ -284,7 +284,7 @@ proc uv_open_osfhandle*(os_fd: cint): cint {.UV_API.}
 proc uv_fs_event_init*(loop: ptr uv_loop_t, handle: ptr uv_fs_event_t): cint {.UV_API.}
 proc uv_fs_event_start*(handle: ptr uv_fs_event_t, cb: uv_fs_event_cb, path: cstring, flags: cuint): cint {.UV_API.}
 proc uv_fs_event_stop*(handle: ptr uv_fs_event_t): cint {.UV_API.}
-proc uv_fs_event_getpath*(handle: ptr uv_fs_event_t, buffer: cstring, size: ptr csize_t): cint {.UV_API.}
+proc uv_fs_event_getpath*(handle: ptr uv_fs_event_t, buffer: pointer, size: ptr csize_t): cint {.UV_API.}
 
 # handle
 proc uv_is_active*(handle: ptr uv_handle_t): cint {.UV_API.}
