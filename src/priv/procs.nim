@@ -125,10 +125,6 @@ proc uv_os_uname*(buffer: ptr uv_utsname_t): cint {.UV_API.}
 proc uv_gettimeofday*(tv: ptr uv_timeval64_t): cint {.UV_API.}
 proc uv_random*(loop: ptr uv_loop_t, req: ptr uv_random_t, buf: pointer, buflen: csize_t, flags: cuint, cb: uv_random_cb): cint {.UV_API.}
 proc uv_sleep*(msec: cuint) {.UV_API.}
-proc uv_utf16_length_as_wtf8*(utf16: ptr uint16, utf16_len: csize_t): csize_t {.UV_API.}
-proc uv_utf16_to_wtf8*(utf16: ptr uint16, utf16_len: csize_t, wtf8_ptr: ptr ptr char, wtf8_len_ptr: ptr csize_t): cint {.UV_API.}
-proc uv_wtf8_length_as_utf16*(wtf8: ptr char): csize_t {.UV_API.}
-proc uv_wtf8_to_utf16*(utf8: ptr char, utf16: ptr uint16, utf16_len: csize_t) {.UV_API.}
 
 # pipe
 proc uv_pipe_init*(loop: ptr uv_loop_t, handle: ptr uv_pipe_t, ipc: cint): cint {.UV_API.}
