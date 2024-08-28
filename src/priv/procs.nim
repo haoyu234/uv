@@ -130,7 +130,7 @@ proc uv_sleep*(msec: cuint) {.UV_API.}
 proc uv_pipe_init*(loop: ptr uv_loop_t, handle: ptr uv_pipe_t, ipc: cint): cint {.UV_API.}
 proc uv_pipe_open*(handle: ptr uv_pipe_t, file: cint): cint {.UV_API.}
 proc uv_pipe_bind*(handle: ptr uv_pipe_t, name: cstring): cint {.UV_API.}
-proc uv_pipe_bind2*(handle: ptr uv_pipe_t, name: cstring, namelen: csize_t, flags: cuint): cint {.UV_API.}
+proc uv_pipe_bind2*(handle: ptr uv_pipe_t, name: pointer, namelen: csize_t, flags: cuint): cint {.UV_API.}
 proc uv_pipe_connect*(req: ptr uv_connect_t, handle: ptr uv_pipe_t, name: cstring, cb: uv_connect_cb) {.UV_API.}
 proc uv_pipe_connect2*(req: ptr uv_connect_t, handle: ptr uv_pipe_t, name: pointer, namelen: csize_t, flags: cuint, cb: uv_connect_cb) {.UV_API.}
 proc uv_pipe_getsockname*(handle: ptr uv_pipe_t, buffer: pointer, size: ptr csize_t): cint {.UV_API.}
