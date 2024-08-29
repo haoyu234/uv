@@ -1,5 +1,7 @@
-import ./priv/[enums, procs, types]
+import ./priv/[enums, procs, types, errors]
 
-export enums
-export procs
-export types
+export
+  enums,
+  procs,
+  types,
+  errors
