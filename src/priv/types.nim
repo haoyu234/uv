@@ -1,8 +1,37 @@
 import ./c
+import ./enums
 import std/nativesockets
+
+when defined(windows):
+  import winlean
+elif defined(linux):
+  import posix
 
 {.pragma: UV_OBJ, importc, header: C_HEADER.}
 {.pragma: UV_CALLBACK, importc, header: C_HEADER.}
+
+when defined(windows):
+  type
+    uv_os_sock_t* {.UV_OBJ.} = SocketHandle
+    uv_os_fd_t* {.UV_OBJ.} = winlean.Handle
+    uv_pid_t* {.UV_OBJ.} = cint
+    uv_uid_t* {.UV_OBJ.} = cuchar
+    uv_gid_t* {.UV_OBJ.} = cuchar
+
+    uv_buf_t* {.UV_OBJ.} = object
+      base*: pointer
+      len*: ULONG
+else:
+  type
+    uv_os_sock_t* {.UV_OBJ.} = SocketHandle
+    uv_os_fd_t* {.UV_OBJ.} = cint
+    uv_pid_t* {.UV_OBJ.} = Pid
+    uv_uid_t* {.UV_OBJ.} = Uid
+    uv_gid_t* {.UV_OBJ.} = Gid
+
+    uv_buf_t* {.UV_OBJ.} = object
+      len*: csize_t
+      base*: pointer
 
 type
   # async
@@ -38,28 +67,88 @@ type
   uv_metrics_t* {.UV_OBJ.} = object
 
   # misc
-  uv_buf_t* {.UV_OBJ.} = object
   uv_malloc_func* {.UV_CALLBACK.} = proc(size: csize_t) {.cdecl.}
   uv_realloc_func* {.UV_CALLBACK.} = proc(`ptr`: pointer, size: csize_t) {.cdecl.}
   uv_calloc_func* {.UV_CALLBACK.} = proc(count: csize_t, size: csize_t) {.cdecl.}
   uv_free_func* {.UV_CALLBACK.} = proc(`ptr`: pointer) {.cdecl.}
   uv_random_cb* {.UV_CALLBACK.} = proc(req: ptr uv_random_t, status: cint, buf: pointer, buflen: csize_t) {.cdecl.}
-  uv_os_sock_t* {.UV_OBJ.} = object
-  uv_os_fd_t* {.UV_OBJ.} = object
-  uv_pid_t* {.UV_OBJ.} = object
+
   uv_timeval_t* {.UV_OBJ.} = object
+    tv_sec*: clong
+    tv_usec*: clong
   uv_timeval64_t* {.UV_OBJ.} = object
+    tv_sec*: int64
+    tv_nsec*: int32
+
+  uv_timespec_t* {.UV_OBJ.} = object
+    tv_sec*: clong
+    tv_usec*: clong
   uv_timespec64_t* {.UV_OBJ.} = object
+    tv_sec*: int64
+    tv_nsec*: int32
+
   uv_rusage_t* {.UV_OBJ.} = object
+   ru_utime*: uv_timeval_t  # user CPU time used
+   ru_stime*: uv_timeval_t  # system CPU time used
+   ru_maxrss*: uint64       # maximum resident set size
+   ru_ixrss*: uint64        # integral shared memory size
+   ru_idrss*: uint64        # integral unshared data size
+   ru_isrss*: uint64        # integral unshared stack size
+   ru_minflt*: uint64       # page reclaims (soft page faults)
+   ru_majflt*: uint64       # page faults (hard page faults)
+   ru_nswap*: uint64        # swaps
+   ru_inblock*: uint64      # block input operations
+   ru_oublock*: uint64      # block output operations
+   ru_msgsnd*: uint64       # IPC messages sent
+   ru_msgrcv*: uint64       # IPC messages received
+   ru_nsignals*: uint64     # signals received
+   ru_nvcsw*: uint64        # voluntary context switches
+   ru_nivcsw*: uint64       # involuntary context switches
+
+  uv_cpu_times_s {.importc: "struct uv_cpu_times_s", header: C_HEADER.} = object
+    user*: uint64 # milliseconds
+    nice*: uint64 # milliseconds
+    sys*: uint64  # milliseconds
+    idle*: uint64 # milliseconds
+    irq*: uint64  # milliseconds
+
   uv_cpu_info_t* {.UV_OBJ.} = object
+    model*: cstring
+    speed*: cint
+    cpu_times*: uv_cpu_times_s
+
   uv_interface_address_t* {.UV_OBJ.} = object
+    name*: cstring
+    phys_addr*: array[6, char]
+    is_internal*: cint
+    address4*: Sockaddr_in
+    address6*: Sockaddr_in6
+    netmask4*: Sockaddr_in
+    netmask6*: Sockaddr_in6
+
   uv_passwd_t* {.UV_OBJ.} = object
+    username*: cstring
+    uid*: culong
+    gid*: culong
+    shell*: cstring
+    homedir*: cstring
+
   uv_group_t* {.UV_OBJ.} = object
+    groupname*: cstring
+    gid*: culong
+    members*: ptr cstring
+
   uv_utsname_t* {.UV_OBJ.} = object
+    sysname*: array[256, char]
+    release*: array[256, char]
+    version*: array[256, char]
+    machine*: array[256, char]
+
   uv_env_item_t* {.UV_OBJ.} = object
+    name*: cstring
+    value*: cstring
+
   uv_random_t* {.UV_OBJ.} = object
-  uv_uid_t* {.UV_OBJ.} = object
-  uv_gid_t* {.UV_OBJ.} = object
 
   # pipe
   uv_pipe_t* {.UV_OBJ.} = object
@@ -106,11 +195,42 @@ type
 
   # fs
   uv_fs_t* {.UV_OBJ.} = object
-  uv_timespec_t* {.UV_OBJ.} = object
   uv_stat_t* {.UV_OBJ.} = object
+    st_dev*: uint64
+    st_mode*: uint64
+    st_nlink*: uint64
+    st_uid*: uint64
+    st_gid*: uint64
+    st_rdev*: uint64
+    st_ino*: uint64
+    st_size*: uint64
+    st_blksize*: uint64
+    st_blocks*: uint64
+    st_flags*: uint64
+    st_gen*: uint64
+    st_atim*: uv_timespec_t
+    st_mtim*: uv_timespec_t
+    st_ctim*: uv_timespec_t
+    st_birthtim*: uv_timespec_t
+
   uv_statfs_t* {.UV_OBJ.} = object
+    f_type*: uint64
+    f_bsize*: uint64
+    f_blocks*: uint64
+    f_bfree*: uint64
+    f_bavail*: uint64
+    f_files*: uint64
+    f_ffree*: uint64
+    f_spare*: array[4, uint64]
+
   uv_dirent_t* {.UV_OBJ.} = object
+    name*: cstring
+    `type`*: uv_dirent_type_t
+
   uv_dir_t* {.UV_OBJ.} = object
+    dirents*: ptr uv_dirent_t
+    nentries*: csize_t
+
   uv_fs_cb* {.UV_CALLBACK.} = proc(req: ptr uv_fs_t) {.cdecl.}
 
   # fs_event
@@ -129,8 +249,26 @@ type
   # process
   uv_process_t* {.UV_OBJ.} = object
   uv_process_options_t* {.UV_OBJ.} = object
+    exit_cb*: uv_exit_cb
+    file*: cstring
+    args*: ptr cstring
+    env*: ptr cstring
+    cwd*: cstring
+    flags*: cuint
+    stdio_count*: cint
+    stdio*: ptr uv_stdio_container_t
+    uid*: uv_uid_t
+    gid*: uv_gid_t
+
   uv_exit_cb* {.UV_CALLBACK.} = proc(param: ptr uv_process_t, exit_status: int64, term_signal: cint) {.cdecl.}
+
   uv_stdio_container_t* {.UV_OBJ.} = object
+    flags*: uv_stdio_flags
+    data*: uv_stdio_container_t_data
+
+  uv_stdio_container_t_data {.UV_OBJ, union.} = object
+      stream*: ptr uv_stream_t
+      fd*: cint
 
   # request
   uv_req_t* {.UV_OBJ.} = object

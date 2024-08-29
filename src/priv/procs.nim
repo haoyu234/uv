@@ -274,7 +274,7 @@ proc uv_fs_get_ptr*(req: ptr uv_fs_t): pointer {.UV_API.}
 proc uv_fs_get_path*(req: ptr uv_fs_t): cstring {.UV_API.}
 proc uv_fs_get_statbuf*(req: ptr uv_fs_t): ptr uv_stat_t {.UV_API.}
 proc uv_get_osfhandle*(fd: cint): cint {.UV_API.}
-proc uv_open_osfhandle*(os_fd: cint): cint {.UV_API.}
+proc uv_open_osfhandle*(os_fd: uv_os_fd_t): cint {.UV_API.}
 
 # fs_event
 proc uv_fs_event_init*(loop: ptr uv_loop_t, handle: ptr uv_fs_event_t): cint {.UV_API.}
@@ -323,7 +323,7 @@ proc uv_req_type_name*(tp: uv_req_type): cstring {.UV_API.}
 # tcp
 proc uv_tcp_init*(loop: ptr uv_loop_t, handle: ptr uv_tcp_t): cint {.UV_API.}
 proc uv_tcp_init_ex*(loop: ptr uv_loop_t, handle: ptr uv_tcp_t, flags: cuint): cint {.UV_API.}
-proc uv_tcp_open*(handle: ptr uv_tcp_t, sock: cint): cint {.UV_API.}
+proc uv_tcp_open*(handle: ptr uv_tcp_t, sock: uv_os_sock_t): cint {.UV_API.}
 proc uv_tcp_nodelay*(handle: ptr uv_tcp_t, enable: cint): cint {.UV_API.}
 proc uv_tcp_keepalive*(handle: ptr uv_tcp_t, enable: cint, delay: cuint): cint {.UV_API.}
 proc uv_tcp_simultaneous_accepts*(handle: ptr uv_tcp_t, enable: cint): cint {.UV_API.}
@@ -332,7 +332,7 @@ proc uv_tcp_getsockname*(handle: ptr uv_tcp_t, name: ptr SockAddr, namelen: ptr 
 proc uv_tcp_getpeername*(handle: ptr uv_tcp_t, name: ptr SockAddr, namelen: ptr cint): cint {.UV_API.}
 proc uv_tcp_connect*(req: ptr uv_connect_t, handle: ptr uv_tcp_t, `addr`: ptr SockAddr, cb: uv_connect_cb): cint {.UV_API.}
 proc uv_tcp_close_reset*(handle: ptr uv_tcp_t, close_cb: uv_close_cb): cint {.UV_API.}
-proc uv_socketpair*(tp: cint, protocol: cint, socket_vector: array[2, cint], flags0: cint, flags1: cint): cint {.UV_API.}
+proc uv_socketpair*(tp: cint, protocol: cint, socket_vector: array[2, uv_os_sock_t], flags0: cint, flags1: cint): cint {.UV_API.}
 
 # tty
 proc uv_tty_init*(loop: ptr uv_loop_t, handle: ptr uv_tty_t, fd: cint, unused: cint): cint {.UV_API.}
