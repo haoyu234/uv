@@ -194,6 +194,7 @@ type
   uv_timer_cb* {.UV_CALLBACK.} = proc(handle: ptr uv_timer_t) {.cdecl.}
 
   # fs
+  uv_file* {.UV_OBJ.} = distinct cint
   uv_fs_t* {.UV_OBJ.} = object
   uv_stat_t* {.UV_OBJ.} = object
     st_dev*: uint64

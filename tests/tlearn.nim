@@ -55,7 +55,7 @@ test "fs readsync":
 
   var open_req: uv_fs_t
   let fd = uv_fs_open(loop, open_req.addr, path, when_posix(O_RDONLY.cint,
-      0), when_posix(S_IRUSR.cint, 0), nil)
+      0), when_posix(S_IRUSR.cint, 0), nil).uv_file
 
   var buf: array[37, byte]
   var iov = uv_buf_init(buf[0].addr, len(buf).cuint)
@@ -84,7 +84,7 @@ test "fs readasync":
 
   var open_req: uv_fs_t
   let fd = uv_fs_open(loop, open_req.addr, path, when_posix(O_RDONLY.cint,
-      0), when_posix(S_IRUSR.cint, 0), nil)
+      0), when_posix(S_IRUSR.cint, 0), nil).uv_file
 
   var buf: array[37, byte]
   var iov = uv_buf_init(buf[0].addr, len(buf).cuint)

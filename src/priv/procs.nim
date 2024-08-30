@@ -67,7 +67,7 @@ proc uv_metrics_idle_time*(loop: ptr uv_loop_t): uint64 {.UV_API.}
 proc uv_metrics_info*(loop: ptr uv_loop_t, metrics: ptr uv_metrics_t): cint {.UV_API.}
 
 # misc
-proc uv_guess_handle*(file: cint): uv_handle_type {.UV_API.}
+proc uv_guess_handle*(file: uv_file): uv_handle_type {.UV_API.}
 proc uv_replace_allocator*(malloc_func: uv_malloc_func, realloc_func: uv_realloc_func, calloc_func: uv_calloc_func, free_func: uv_free_func): cint {.UV_API.}
 proc uv_library_shutdown*() {.UV_API.}
 proc uv_buf_init*(base: pointer, len: cuint): uv_buf_t {.UV_API.}
@@ -128,7 +128,7 @@ proc uv_sleep*(msec: cuint) {.UV_API.}
 
 # pipe
 proc uv_pipe_init*(loop: ptr uv_loop_t, handle: ptr uv_pipe_t, ipc: cint): cint {.UV_API.}
-proc uv_pipe_open*(handle: ptr uv_pipe_t, file: cint): cint {.UV_API.}
+proc uv_pipe_open*(handle: ptr uv_pipe_t, file: uv_file): cint {.UV_API.}
 proc uv_pipe_bind*(handle: ptr uv_pipe_t, name: cstring): cint {.UV_API.}
 proc uv_pipe_bind2*(handle: ptr uv_pipe_t, name: pointer, namelen: csize_t, flags: cuint): cint {.UV_API.}
 proc uv_pipe_connect*(req: ptr uv_connect_t, handle: ptr uv_pipe_t, name: cstring, cb: uv_connect_cb) {.UV_API.}
@@ -139,7 +139,7 @@ proc uv_pipe_pending_instances*(handle: ptr uv_pipe_t, count: cint) {.UV_API.}
 proc uv_pipe_pending_count*(handle: ptr uv_pipe_t): cint {.UV_API.}
 proc uv_pipe_pending_type*(handle: ptr uv_pipe_t): uv_handle_type {.UV_API.}
 proc uv_pipe_chmod*(handle: ptr uv_pipe_t, flags: cint): cint {.UV_API.}
-proc uv_pipe*(fds: array[2, cint], read_flags: cint, write_flags: cint): cint {.UV_API.}
+proc uv_pipe*(fds: array[2, uv_file], read_flags: cint, write_flags: cint): cint {.UV_API.}
 
 # prepare
 proc uv_prepare_init*(loop: ptr uv_loop_t, prepare: ptr uv_prepare_t): cint {.UV_API.}
@@ -230,11 +230,11 @@ proc uv_version_string*(): cstring {.UV_API.}
 
 # fs
 proc uv_fs_req_cleanup*(req: ptr uv_fs_t) {.UV_API.}
-proc uv_fs_close*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: cint, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_close*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: uv_file, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_open*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, flags: cint, mode: cint, cb: uv_fs_cb): cint {.UV_API.}
-proc uv_fs_read*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: cint, bufs: ptr uv_buf_t, nbufs: cuint, offset: int64, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_read*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: uv_file, bufs: ptr uv_buf_t, nbufs: cuint, offset: int64, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_unlink*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, cb: uv_fs_cb): cint {.UV_API.}
-proc uv_fs_write*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: cint, bufs: ptr uv_buf_t, nbufs: cuint, offset: int64, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_write*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: uv_file, bufs: ptr uv_buf_t, nbufs: cuint, offset: int64, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_mkdir*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, mode: cint, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_mkdtemp*(loop: ptr uv_loop_t, req: ptr uv_fs_t, tpl: cstring, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_mkstemp*(loop: ptr uv_loop_t, req: ptr uv_fs_t, tpl: cstring, cb: uv_fs_cb): cint {.UV_API.}
@@ -245,27 +245,27 @@ proc uv_fs_readdir*(loop: ptr uv_loop_t, req: ptr uv_fs_t, dir: ptr uv_dir_t, cb
 proc uv_fs_scandir*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, flags: cint, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_scandir_next*(req: ptr uv_fs_t, ent: ptr uv_dirent_t): cint {.UV_API.}
 proc uv_fs_stat*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, cb: uv_fs_cb): cint {.UV_API.}
-proc uv_fs_fstat*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: cint, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_fstat*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: uv_file, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_lstat*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_statfs*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_rename*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, new_path: cstring, cb: uv_fs_cb): cint {.UV_API.}
-proc uv_fs_fsync*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: cint, cb: uv_fs_cb): cint {.UV_API.}
-proc uv_fs_fdatasync*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: cint, cb: uv_fs_cb): cint {.UV_API.}
-proc uv_fs_ftruncate*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: cint, offset: int64, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_fsync*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: uv_file, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_fdatasync*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: uv_file, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_ftruncate*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: uv_file, offset: int64, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_copyfile*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, new_path: cstring, flags: cint, cb: uv_fs_cb): cint {.UV_API.}
-proc uv_fs_sendfile*(loop: ptr uv_loop_t, req: ptr uv_fs_t, out_fd: cint, in_fd: cint, in_offset: int64, length: csize_t, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_sendfile*(loop: ptr uv_loop_t, req: ptr uv_fs_t, out_fd: uv_file, in_fd: uv_file, in_offset: int64, length: csize_t, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_access*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, mode: cint, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_chmod*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, mode: cint, cb: uv_fs_cb): cint {.UV_API.}
-proc uv_fs_fchmod*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: cint, mode: cint, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_fchmod*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: uv_file, mode: cint, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_utime*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, atime: cdouble, mtime: cdouble, cb: uv_fs_cb): cint {.UV_API.}
-proc uv_fs_futime*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: cint, atime: cdouble, mtime: cdouble, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_futime*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: uv_file, atime: cdouble, mtime: cdouble, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_lutime*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, atime: cdouble, mtime: cdouble, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_link*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, new_path: cstring, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_symlink*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, new_path: cstring, flags: cint, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_readlink*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_realpath*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_chown*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, uid: uv_uid_t, gid: uv_gid_t, cb: uv_fs_cb): cint {.UV_API.}
-proc uv_fs_fchown*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: cint, uid: uv_uid_t, gid: uv_gid_t, cb: uv_fs_cb): cint {.UV_API.}
+proc uv_fs_fchown*(loop: ptr uv_loop_t, req: ptr uv_fs_t, file: uv_file, uid: uv_uid_t, gid: uv_gid_t, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_lchown*(loop: ptr uv_loop_t, req: ptr uv_fs_t, path: cstring, uid: uv_uid_t, gid: uv_gid_t, cb: uv_fs_cb): cint {.UV_API.}
 proc uv_fs_get_type*(req: ptr uv_fs_t): uv_fs_type {.UV_API.}
 proc uv_fs_get_result*(req: ptr uv_fs_t): csize_t {.UV_API.}
@@ -335,7 +335,7 @@ proc uv_tcp_close_reset*(handle: ptr uv_tcp_t, close_cb: uv_close_cb): cint {.UV
 proc uv_socketpair*(tp: cint, protocol: cint, socket_vector: array[2, uv_os_sock_t], flags0: cint, flags1: cint): cint {.UV_API.}
 
 # tty
-proc uv_tty_init*(loop: ptr uv_loop_t, handle: ptr uv_tty_t, fd: cint, unused: cint): cint {.UV_API.}
+proc uv_tty_init*(loop: ptr uv_loop_t, handle: ptr uv_tty_t, fd: uv_file, unused: cint): cint {.UV_API.}
 proc uv_tty_set_mode*(handle: ptr uv_tty_t, mode: uv_tty_mode_t): cint {.UV_API.}
 proc uv_tty_reset_mode*(): cint {.UV_API.}
 proc uv_tty_get_winsize*(handle: ptr uv_tty_t, width: ptr cint, height: ptr cint): cint {.UV_API.}
