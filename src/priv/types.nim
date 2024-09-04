@@ -78,11 +78,11 @@ type
     tv_usec*: clong
   uv_timeval64_t* {.UV_OBJ.} = object
     tv_sec*: int64
-    tv_nsec*: int32
+    tv_usec*: int32
 
   uv_timespec_t* {.UV_OBJ.} = object
     tv_sec*: clong
-    tv_usec*: clong
+    tv_nsec*: clong
   uv_timespec64_t* {.UV_OBJ.} = object
     tv_sec*: int64
     tv_nsec*: int32
